@@ -3,8 +3,18 @@
 import Image from "next/image";
 import { useEffect } from "react";
 
+type ConfettiParticle = {
+  x: number;
+  y: number;
+  r: number;
+  d: number;
+  color: string;
+  tilt: number;
+  tiltAngle: number;
+  tiltAngleIncremental: number;
+};
+
 export default function Home() {
-  // Confetti effect using canvas
   useEffect(() => {
     const canvas = document.createElement("canvas");
     canvas.id = "confetti-canvas";
@@ -16,12 +26,16 @@ export default function Home() {
     canvas.style.pointerEvents = "none";
     canvas.style.zIndex = "9999";
     document.body.appendChild(canvas);
+
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
     let W = window.innerWidth;
     let H = window.innerHeight;
     canvas.width = W;
     canvas.height = H;
-    let confetti: any[] = [];
+
+    let confetti: ConfettiParticle[] = [];
     for (let i = 0; i < 150; i++) {
       confetti.push({
         x: Math.random() * W,
@@ -34,10 +48,10 @@ export default function Home() {
         tiltAngleIncremental: Math.random() * 0.07 + 0.05,
       });
     }
+
     function draw() {
-      if (!ctx) return; 
       ctx.clearRect(0, 0, W, H);
-      confetti.forEach(c => {
+      confetti.forEach((c) => {
         ctx.beginPath();
         ctx.lineWidth = c.r;
         ctx.strokeStyle = c.color;
@@ -47,39 +61,39 @@ export default function Home() {
       });
       update();
     }
+
     function update() {
       for (let i = 0; i < confetti.length; i++) {
-        let c = confetti[i];
+        const c = confetti[i];
         c.y += Math.cos(c.d) + 2 + c.r / 2;
         c.x += Math.sin(0.01 * c.d);
         c.tiltAngle += c.tiltAngleIncremental;
         c.tilt = Math.sin(c.tiltAngle) * 15;
         if (c.y > H) {
           confetti[i] = {
+            ...c,
             x: Math.random() * W,
             y: -10,
-            r: c.r,
-            d: c.d,
-            color: c.color,
-            tilt: c.tilt,
-            tiltAngle: c.tiltAngle,
-            tiltAngleIncremental: c.tiltAngleIncremental,
           };
         }
       }
     }
-    let animationFrame;
+
+    let animationFrame: number;
     function animate() {
       draw();
       animationFrame = requestAnimationFrame(animate);
     }
+
     animate();
+
     window.addEventListener("resize", () => {
       W = window.innerWidth;
       H = window.innerHeight;
       canvas.width = W;
       canvas.height = H;
     });
+
     return () => {
       cancelAnimationFrame(animationFrame);
       document.body.removeChild(canvas);
@@ -89,12 +103,20 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 dark:from-[#1a0033] dark:via-[#2d0036] dark:to-[#001a33] p-6">
       <div className="relative z-10 flex flex-col items-center gap-8 max-w-2xl text-center">
-        <Image src="/next.svg" alt="Next.js" width={120} height={30} className="mb-2 dark:invert" />
+        <Image
+          src="/next.svg"
+          alt="Next.js"
+          width={120}
+          height={30}
+          className="mb-2 dark:invert"
+        />
         <h1 className="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent drop-shadow-lg animate-bounce">
           Happy Birthday, Shivansh Singh! 🎉
         </h1>
         <p className="text-xl sm:text-2xl text-gray-700 dark:text-gray-200 font-medium mt-2">
-          Wishing you a day filled with joy, laughter, and all your favorite things.<br />
+          Wishing you a day filled with joy, laughter, and all your favorite
+          things.
+          <br />
           May your year ahead be as amazing as you are!
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
@@ -108,7 +130,9 @@ export default function Home() {
           </a>
         </div>
         <div className="mt-8 flex flex-col items-center gap-2">
-          <span className="text-lg text-gray-500 dark:text-gray-400">Made with ❤️ using Next.js</span>
+          <span className="text-lg text-gray-500 dark:text-gray-400">
+            Made with ❤️ using Next.js
+          </span>
         </div>
       </div>
     </div>
