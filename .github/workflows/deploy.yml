@@ -23,9 +23,9 @@ jobs:
           port: 22
           script: |
             cd cicd
-            git pull
+            git pull origin main
             npm install
             npm run build
-            pm2 delete all || true
-            pm2 start npm --name "cicd-app" -- run start
+            pm2 delete cicd-app || true
+            PORT=3000 pm2 start npm --name "cicd-app" -- run start
 
