@@ -35,6 +35,7 @@ export default function Home() {
       });
     }
     function draw() {
+      if (!ctx) return; 
       ctx.clearRect(0, 0, W, H);
       confetti.forEach(c => {
         ctx.beginPath();
