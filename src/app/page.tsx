@@ -21,7 +21,7 @@ export default function Home() {
     let H = window.innerHeight;
     canvas.width = W;
     canvas.height = H;
-    let confetti = [];
+    let confetti: any[] = [];
     for (let i = 0; i < 150; i++) {
       confetti.push({
         x: Math.random() * W,
